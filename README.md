@@ -1,4 +1,4 @@
-# 👗 Point a Camera at Fashion, Let Google's AI Name It
+# 👗 Fashion Image Classifier: Upload a Photo, Let Vertex AI Name It
 
 Upload a photo of a jacket or a dress. A few seconds later a red box lands on the item and a model running on **Google Cloud Vertex AI** tells you what it is, and how sure it is.
 
