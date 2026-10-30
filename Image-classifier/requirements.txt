@@ -1,0 +1,6 @@
+playwright
+openpyxl
+pandas
+pillow
+google-cloud-aiplatform
+streamlit

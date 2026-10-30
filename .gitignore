@@ -1,0 +1,9 @@
+# graft's local graph cache — regenerable, not committed (run `graft build`).
+/graft/
+
+auth_gcp_*.json
+test.jpg
+.venv/
+__pycache__/
+.DS_Store
+.ignore
