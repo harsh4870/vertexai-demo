@@ -1,9 +1,9 @@
 import re
-import time
 from pathlib import Path
 from urllib.request import urlretrieve
 
 import pandas as pd
+from playwright.sync_api import TimeoutError as PlaywrightTimeout
 from playwright.sync_api import sync_playwright
 
 INPUT_XLSX = "./Input/Input.xlsx"
@@ -14,6 +14,7 @@ IMAGE_ROOT = Path("Output/Image")
 CARD = ".ds-sdk-product-item"
 TITLE = "h2 > a"
 PICTURE = ".swiper-slide-active img"
+SHIMMER = ".ds-sdk-product-item-shimmer__image"
 
 
 def safe_name(text):
@@ -55,7 +56,16 @@ def run(jobs, show_browser=True):
         for _, job in jobs.iterrows():
             print(f"Opening {job['URL']}")
             page.goto(job["URL"], timeout=60_000)
-            time.sleep(5)
+            try:
+                # Cards render as shimmer placeholders until the product search returns.
+                page.wait_for_selector(CARD, timeout=30_000)
+                page.wait_for_selector(SHIMMER, state="detached", timeout=30_000)
+            except PlaywrightTimeout:
+                print("  page never finished loading, skipping")
+                continue
+            if not page.query_selector(CARD):
+                print("  no products listed on this page")
+                continue
             collected += grab_cards(page, job)
         browser.close()
 
